@@ -21,46 +21,46 @@ import org.xml.sax.SAXException;
 //TODO unit tests
 public final class HudsonRemoteBuilderController {
 
-    private HudsonRemoteBuilderController() {
-    }
+	private HudsonRemoteBuilderController() {
+	}
 
-    private static CookieForUrl getCookieAndUrlJob(String job) throws IOException {
-	final SimpleUser simple = JobHolder.getJob(job).getUser();
-	final List<String> cookies = MapCookie.getEntryNG(JobHolder.getJob(job).getUrlRepo(), simple.getUsername(), simple.getPassword());
-	final String urlString = JobHolder.getJob(job).getUrlRepo().concat("/job/").concat(job);
-	return new CookieForUrl(cookies, urlString);
-    }
+	private static CookieForUrl getCookieAndUrlJob(String job) throws IOException {
+		final SimpleUser simple = JobHolder.getJob(job).getUser();
+		final List<String> cookies = MapCookie.getEntryNG(JobHolder.getJob(job).getUrlRepo(), simple.getUsername(), simple.getPassword());
+		final String urlString = JobHolder.getJob(job).getUrlRepo().concat("/job/").concat(job);
+		return new CookieForUrl(cookies, urlString);
+	}
 
-    private static CookieForUrl getCookieAndUrlJobForRepo(String repo) throws IOException {
-	final SimpleUser simple = MapHolder.getEntry(repo);
-	final List<String> cookies = MapCookie.getEntryNG(repo, simple.getUsername(), simple.getPassword());
-	return new CookieForUrl(cookies, repo);
-    }
+	private static CookieForUrl getCookieAndUrlJobForRepo(String repo) throws IOException {
+		final SimpleUser simple = MapHolder.getEntry(repo);
+		final List<String> cookies = MapCookie.getEntryNG(repo, simple.getUsername(), simple.getPassword());
+		return new CookieForUrl(cookies, repo);
+	}
 
-    public static String[] getIconsProperties(final String job) throws SAXException, IOException, ParserConfigurationException {
-	// retrieve last build number
-	final CookieForUrl cookieForUrl = getCookieAndUrlJob(job);
-	String response = RestConnectionUtils.makeConnectionAndRead(cookieForUrl.getCookies(),
-	        new URL(cookieForUrl.getUrl().concat(HudsonPluginConstants.SUFFIX_API_XML)));
-	String color = ListingXMLReader.lookForNodeValueInFlatXml("color", response);
-	String iconUrl = ListingXMLReader.lookForNodeValueInFlatXml("iconUrl", response);
-	return new String[] { color, iconUrl };
-    }
+	public static String[] getIconsProperties(final String job) throws SAXException, IOException, ParserConfigurationException {
+		// retrieve last build number
+		final CookieForUrl cookieForUrl = getCookieAndUrlJob(job);
+		String response = RestConnectionUtils.makeConnectionAndRead(cookieForUrl.getCookies(),
+		        new URL(cookieForUrl.getUrl().concat(HudsonPluginConstants.SUFFIX_API_XML)));
+		String color = ListingXMLReader.lookForNodeValueInFlatXml("color", response);
+		String iconUrl = ListingXMLReader.lookForNodeValueInFlatXml("iconUrl", response);
+		return new String[] { color, iconUrl };
+	}
 
-    public static Map<String, String> getAllColors(final String job) throws SAXException, IOException, ParserConfigurationException {
-	// retrieve last build number
-	final CookieForUrl cookieForUrl = getCookieAndUrlJob(job);
-	String urlRepo = JobHolder.getJob(job).getUrlRepo();
-	String response = RestConnectionUtils.makeConnectionAndRead(cookieForUrl.getCookies(), new URL(urlRepo.concat(HudsonPluginConstants.SUFFIX_API_XML)));
-	return ListingXMLReader.getAllNodesInMap(response, "name", "color");
-    }
+	public static Map<String, String> getAllColors(final String job) throws SAXException, IOException, ParserConfigurationException {
+		// retrieve last build number
+		final CookieForUrl cookieForUrl = getCookieAndUrlJob(job);
+		String urlRepo = JobHolder.getJob(job).getUrlRepo();
+		String response = RestConnectionUtils.makeConnectionAndRead(cookieForUrl.getCookies(), new URL(urlRepo.concat(HudsonPluginConstants.SUFFIX_API_XML)));
+		return ListingXMLReader.getAllNodesInMap(response, "name", "color");
+	}
 
-    public static Map<String, String> getAllColorsForRepo(final String repoBaseUrl) throws SAXException, IOException, ParserConfigurationException {
-	// retrieve last build number
-	final CookieForUrl cookieForUrl = getCookieAndUrlJobForRepo(repoBaseUrl);
-	String response = RestConnectionUtils.makeConnectionAndRead(cookieForUrl.getCookies(),
-	        new URL(repoBaseUrl.concat(HudsonPluginConstants.SUFFIX_API_XML)));
-	return ListingXMLReader.getAllNodesInMap(response, "name", "color");
-    }
+	public static Map<String, String> getAllColorsForRepo(final String repoBaseUrl) throws SAXException, IOException, ParserConfigurationException {
+		// retrieve last build number
+		final CookieForUrl cookieForUrl = getCookieAndUrlJobForRepo(repoBaseUrl);
+		String response = RestConnectionUtils.makeConnectionAndRead(cookieForUrl.getCookies(),
+		        new URL(repoBaseUrl.concat(HudsonPluginConstants.SUFFIX_API_XML)));
+		return ListingXMLReader.getAllNodesInMap(response, "name", "color");
+	}
 
 }

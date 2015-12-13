@@ -35,6 +35,7 @@ public class Job {
 
 	/**
 	 * Simple initializing constructor
+	 * 
 	 * @param urlRepo
 	 * @param jobName
 	 * @param jobDescription
@@ -86,52 +87,52 @@ public class Job {
 	public void setUser(SimpleUser user) {
 		this.user = user;
 	}
-	
+
 	@Override
 	public String toString() {
-	    return jobName;
+		return jobName;
 	}
 
 	@Override
-        public int hashCode() {
-	    final int prime = 31;
-	    int result = 1;
-	    result = prime * result + ((jobDescription == null) ? 0 : jobDescription.hashCode());
-	    result = prime * result + ((jobName == null) ? 0 : jobName.hashCode());
-	    result = prime * result + ((urlRepo == null) ? 0 : urlRepo.hashCode());
-	    result = prime * result + ((user == null) ? 0 : user.hashCode());
-	    return result;
-        }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((jobDescription == null) ? 0 : jobDescription.hashCode());
+		result = prime * result + ((jobName == null) ? 0 : jobName.hashCode());
+		result = prime * result + ((urlRepo == null) ? 0 : urlRepo.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
 
 	@Override
-        public boolean equals(Object obj) {
-	    if (this == obj)
-	        return true;
-	    if (obj == null)
-	        return false;
-	    if (getClass() != obj.getClass())
-	        return false;
-	    Job other = (Job) obj;
-	    if (jobDescription == null) {
-	        if (other.jobDescription != null)
-		    return false;
-	    } else if (!jobDescription.equals(other.jobDescription))
-	        return false;
-	    if (jobName == null) {
-	        if (other.jobName != null)
-		    return false;
-	    } else if (!jobName.equals(other.jobName))
-	        return false;
-	    if (urlRepo == null) {
-	        if (other.urlRepo != null)
-		    return false;
-	    } else if (!urlRepo.equals(other.urlRepo))
-	        return false;
-	    if (user == null) {
-	        if (other.user != null)
-		    return false;
-	    } else if (!user.equals(other.user))
-	        return false;
-	    return true;
-        }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Job other = (Job) obj;
+		if (jobDescription == null) {
+			if (other.jobDescription != null)
+				return false;
+		} else if (!jobDescription.equals(other.jobDescription))
+			return false;
+		if (jobName == null) {
+			if (other.jobName != null)
+				return false;
+		} else if (!jobName.equals(other.jobName))
+			return false;
+		if (urlRepo == null) {
+			if (other.urlRepo != null)
+				return false;
+		} else if (!urlRepo.equals(other.urlRepo))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		return true;
+	}
 }

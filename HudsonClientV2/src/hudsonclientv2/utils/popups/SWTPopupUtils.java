@@ -57,9 +57,9 @@ public class SWTPopupUtils {
 	public static Shell createAndCenterPopup(Display display, int i, int j) {
 		return createAndCenterPopup("", display, i, j);
 	}
-	
+
 	public static void showMessage(Shell sh, String message) {
 		MessageDialog.openInformation(sh, "Information", message);
-	    }
+	}
 
 }

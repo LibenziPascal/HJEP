@@ -39,145 +39,145 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.part.ViewPart;
 
 public class HudsonRepositoriesView extends ViewPart {
-    public static final String ID = "hudsonclientv2.configuration.repo.view.HudsonRepositoriesView";
+	public static final String ID = "hudsonclientv2.configuration.repo.view.HudsonRepositoriesView";
 
-    private TableViewer viewer;
+	private TableViewer viewer;
 
-    private IAction createRepositoryAction;
-    
-    private IAction editRepositoryAction;
+	private IAction createRepositoryAction;
 
-    private IAction createJobInRepoAction;
+	private IAction editRepositoryAction;
 
-    public HudsonRepositoriesView() {
-    }
+	private IAction createJobInRepoAction;
 
-    @Override
-    public void createPartControl(Composite parent) {
-	viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-	viewer.setContentProvider(new ViewContentProvider());
-	viewer.setLabelProvider(new ViewLabelProvider());
-	viewer.setSorter(new NameSorter());
-	viewer.setInput(getViewSite());
-
-	// Create the help context id for the viewer's control
-	PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "HudsonClient.viewer");
-	makeActions();
-	hookContextMenu();
-	contributeToActionBars();
-    }
-
-    private void hookContextMenu() {
-	MenuManager menuMgr = new MenuManager("#PopupMenu");
-	menuMgr.setRemoveAllWhenShown(true);
-	menuMgr.addMenuListener(new IMenuListener() {
-	    public void menuAboutToShow(IMenuManager manager) {
-		HudsonRepositoriesView.this.fillContextMenu(manager);
-	    }
-	});
-	Menu menu = menuMgr.createContextMenu(viewer.getControl());
-	viewer.getControl().setMenu(menu);
-	getSite().registerContextMenu(menuMgr, viewer);
-    }
-
-    private void contributeToActionBars() {
-	IActionBars bars = getViewSite().getActionBars();
-	fillLocalPullDown(bars.getMenuManager());
-	fillLocalToolBar(bars.getToolBarManager());
-    }
-
-    private void fillLocalPullDown(IMenuManager manager) {
-	manager.add(createRepositoryAction);
-	manager.add(new Separator());
-	// manager.add(listJobsAction);
-    }
-
-    private void fillContextMenu(IMenuManager manager) {
-	manager.add(editRepositoryAction);
-	manager.add(createJobInRepoAction);
-	// Other plug-ins can contribute there actions here
-	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-
-    private void fillLocalToolBar(IToolBarManager manager) {
-	// manager.add(listJobsAction);
-    }
-
-    class ViewContentProvider implements IStructuredContentProvider {
-	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+	public HudsonRepositoriesView() {
 	}
 
-	public void dispose() {
+	@Override
+	public void createPartControl(Composite parent) {
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setContentProvider(new ViewContentProvider());
+		viewer.setLabelProvider(new ViewLabelProvider());
+		viewer.setSorter(new NameSorter());
+		viewer.setInput(getViewSite());
+
+		// Create the help context id for the viewer's control
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "HudsonClient.viewer");
+		makeActions();
+		hookContextMenu();
+		contributeToActionBars();
 	}
 
-	public Object[] getElements(Object parent) {
-	    return getExistingRepositories();
+	private void hookContextMenu() {
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				HudsonRepositoriesView.this.fillContextMenu(manager);
+			}
+		});
+		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuMgr, viewer);
 	}
 
-	private Object[] getExistingRepositories() {
-	    return MapHolder.getUrls().toArray();
-	}
-    }
-
-    class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-	public String getColumnText(Object obj, int index) {
-	    return getText(obj);
+	private void contributeToActionBars() {
+		IActionBars bars = getViewSite().getActionBars();
+		fillLocalPullDown(bars.getMenuManager());
+		fillLocalToolBar(bars.getToolBarManager());
 	}
 
-	public Image getColumnImage(Object obj, int index) {
-	    return getImage(obj);
+	private void fillLocalPullDown(IMenuManager manager) {
+		manager.add(createRepositoryAction);
+		manager.add(new Separator());
+		// manager.add(listJobsAction);
 	}
 
-	public Image getImage(Object obj) {
-	    return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+	private void fillContextMenu(IMenuManager manager) {
+		manager.add(editRepositoryAction);
+		manager.add(createJobInRepoAction);
+		// Other plug-ins can contribute there actions here
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
-    }
 
-    class NameSorter extends ViewerSorter {
-    }
+	private void fillLocalToolBar(IToolBarManager manager) {
+		// manager.add(listJobsAction);
+	}
 
-    private void makeActions() {
-	createRepositoryAction = new Action() {
-	    public void run() {
-		CreateEditRepositoryPopup.popup(viewer, "", "", "");
-	    }
-	};
-	createRepositoryAction.setText("Configure a repository");
-	editRepositoryAction = new Action() {
-	    public void run() {
-		ISelection selection = viewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		CreateEditRepositoryPopup.popup(viewer, obj.toString());
-	    }
-	};
-	editRepositoryAction.setText("Edit a repository");
-	
-	createJobInRepoAction = new Action() {
-	    @Override
-	    public void run() {
-		ISelection selection = viewer.getSelection();
-		final Object obj = ((IStructuredSelection) selection).getFirstElement();
-		try {
-		    final SimpleUser simple = JobHolder.getRepo(obj.toString()).getUser();
-		    final List<String> cookies = MapCookie.getEntryNG(obj.toString(), simple.getUsername(), simple.getPassword());
-		    String cookie = "";
-		    for (String c : cookies) {
-			cookie = cookie.concat(c);
-                    }
-		    Browser.setCookie(cookie, obj.toString());
-		    IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(cookie);
-		    browser.openURL(new URL(obj.toString().concat("/newJob")));
-		} catch (IOException | PartInitException e) {
-		    HudsonPluginLogger.logException(e);
+	class ViewContentProvider implements IStructuredContentProvider {
+		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
-	    }
-	};
-	createJobInRepoAction.setText("Create a job");
-    }
 
-    @Override
-    public void setFocus() {
-	viewer.getControl().setFocus();
-    }
+		public void dispose() {
+		}
+
+		public Object[] getElements(Object parent) {
+			return getExistingRepositories();
+		}
+
+		private Object[] getExistingRepositories() {
+			return MapHolder.getUrls().toArray();
+		}
+	}
+
+	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
+		public String getColumnText(Object obj, int index) {
+			return getText(obj);
+		}
+
+		public Image getColumnImage(Object obj, int index) {
+			return getImage(obj);
+		}
+
+		public Image getImage(Object obj) {
+			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+		}
+	}
+
+	class NameSorter extends ViewerSorter {
+	}
+
+	private void makeActions() {
+		createRepositoryAction = new Action() {
+			public void run() {
+				CreateEditRepositoryPopup.popup(viewer, "", "", "");
+			}
+		};
+		createRepositoryAction.setText("Configure a repository");
+		editRepositoryAction = new Action() {
+			public void run() {
+				ISelection selection = viewer.getSelection();
+				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				CreateEditRepositoryPopup.popup(viewer, obj.toString());
+			}
+		};
+		editRepositoryAction.setText("Edit a repository");
+
+		createJobInRepoAction = new Action() {
+			@Override
+			public void run() {
+				ISelection selection = viewer.getSelection();
+				final Object obj = ((IStructuredSelection) selection).getFirstElement();
+				try {
+					final SimpleUser simple = JobHolder.getRepo(obj.toString()).getUser();
+					final List<String> cookies = MapCookie.getEntryNG(obj.toString(), simple.getUsername(), simple.getPassword());
+					String cookie = "";
+					for (String c : cookies) {
+						cookie = cookie.concat(c);
+					}
+					Browser.setCookie(cookie, obj.toString());
+					IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(cookie);
+					browser.openURL(new URL(obj.toString().concat("/newJob")));
+				} catch (IOException | PartInitException e) {
+					HudsonPluginLogger.logException(e);
+				}
+			}
+		};
+		createJobInRepoAction.setText("Create a job");
+	}
+
+	@Override
+	public void setFocus() {
+		viewer.getControl().setFocus();
+	}
 
 }

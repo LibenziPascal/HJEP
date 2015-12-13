@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Define an object representation of a repository
+ * 
  * @author libenzi
  *
  */

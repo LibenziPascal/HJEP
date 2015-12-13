@@ -20,7 +20,8 @@ public class DetailsJobPopup {
 
 	}
 
-	public static void showPopupForJobDetails(final Shell parentShell, final String content, final boolean isView) throws ParserConfigurationException, SAXException, IOException {
+	public static void showPopupForJobDetails(final Shell parentShell, final String content, final boolean isView) throws ParserConfigurationException,
+	        SAXException, IOException {
 		Shell shell = SWTPopupUtils.createAndCenterPopup(parentShell.getDisplay(), 800, 600);
 
 		RowLayout layout = new RowLayout();
@@ -37,10 +38,10 @@ public class DetailsJobPopup {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		TableItem ligne1 = new TableItem(table, SWT.NONE);
-		if(isView) {
-		    ligne1.setText(new String[] { "Name: ", ListingXMLReader.lookForNodeValueInFlatXml("name", content) });
+		if (isView) {
+			ligne1.setText(new String[] { "Name: ", ListingXMLReader.lookForNodeValueInFlatXml("name", content) });
 		} else {
-		    ligne1.setText(new String[] { "Name: ", ListingXMLReader.lookForNodeValueInFlatXml("displayName", content) });
+			ligne1.setText(new String[] { "Name: ", ListingXMLReader.lookForNodeValueInFlatXml("displayName", content) });
 		}
 		TableItem ligne2 = new TableItem(table, SWT.NONE);
 		ligne2.setText(new String[] { "Desc: ", ListingXMLReader.lookForNodeValueInFlatXml("description", content) });

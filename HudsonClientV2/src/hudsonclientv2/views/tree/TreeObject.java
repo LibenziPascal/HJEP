@@ -5,52 +5,52 @@ import hudsonclientv2.bo.Job;
 import org.eclipse.core.runtime.IAdaptable;
 
 public class TreeObject implements IAdaptable {
-    private String name;
-    private TreeParent parent;
-    private int lvl = -1;
-    private Job job;
-    
-    public TreeObject(String name) {
-        this.name = name;
-    }
-    
-    public TreeObject(Job job) {
-        this.job = job;
-        this.name = job.getJobName();
-    }
+	private String name;
+	private TreeParent parent;
+	private int lvl = -1;
+	private Job job;
 
-    public String getName() {
-        return name;
-    }
+	public TreeObject(String name) {
+		this.name = name;
+	}
 
-    public void setParent(TreeParent parent) {
-        this.parent = parent;
-    }
+	public TreeObject(Job job) {
+		this.job = job;
+		this.name = job.getJobName();
+	}
 
-    public TreeParent getParent() {
-        return parent;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String toString() {
-        return getName();
-    }
+	public void setParent(TreeParent parent) {
+		this.parent = parent;
+	}
 
-    public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
-        return null;
-    }
-    
-    public Job getJob() {
-        return job;
-    }
+	public TreeParent getParent() {
+		return parent;
+	}
 
-    public int getLevel() {
-        TreeObject currentElem = this;
-        if (lvl == -1) {
-    	while (currentElem.getParent() != null) {
-    	    lvl++;
-    	    currentElem = currentElem.getParent();
-    	}
-        }
-        return lvl;
-    }
+	public String toString() {
+		return getName();
+	}
+
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
+		return null;
+	}
+
+	public Job getJob() {
+		return job;
+	}
+
+	public int getLevel() {
+		TreeObject currentElem = this;
+		if (lvl == -1) {
+			while (currentElem.getParent() != null) {
+				lvl++;
+				currentElem = currentElem.getParent();
+			}
+		}
+		return lvl;
+	}
 }

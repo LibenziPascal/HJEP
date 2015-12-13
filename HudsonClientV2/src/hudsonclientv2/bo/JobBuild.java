@@ -2,6 +2,7 @@ package hudsonclientv2.bo;
 
 /**
  * Represent a build. TODO utiliser cela (pas encore fait pour l'instant)
+ * 
  * @author libenzi
  *
  */
@@ -19,6 +20,7 @@ public class JobBuild {
 
 	/**
 	 * Initializer
+	 * 
 	 * @param currentState
 	 * @param logConsole
 	 */
